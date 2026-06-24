@@ -6,8 +6,9 @@ branding:
 
 inputs:
   base-url:
-    description: "rkuhub base URL (no trailing slash), e.g. https://hub.rku.dev"
-    required: true
+    description: "rkuhub base URL (no trailing slash). Defaults to https://hub.rku.dev."
+    required: false
+    default: "https://hub.rku.dev"
   token:
     description: "rkuhub API token (sent as a bearer). Store as a repo/org secret."
     required: true
