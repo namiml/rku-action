@@ -1,0 +1,48 @@
+name: Tag release
+
+# When a release lands on main (the release PR pushed from the private source
+# repo bumps VERSION + dist; merging it triggers this), create the immutable
+# vX.Y.Z tag and move the floating major tag (vX) to it — so consumers can pin
+# `uses: namiml/rku-action@v1`. Idempotent: skips if vX.Y.Z already exists.
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: tag-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  tag:
+    name: Tag vX.Y.Z + move major
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Tag this release
+        run: |
+          set -euo pipefail
+          if [ ! -f VERSION ]; then
+            echo "No VERSION file — nothing to tag (bootstrap / non-release push)."
+            exit 0
+          fi
+          VERSION="$(tr -d '[:space:]' < VERSION)"
+          MAJOR="${VERSION%%.*}"
+          if git rev-parse -q --verify "refs/tags/v${VERSION}" >/dev/null; then
+            echo "v${VERSION} already tagged — skipping."
+            exit 0
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag -a "v${VERSION}" -m "rku-action v${VERSION}"
+          git tag -f "v${MAJOR}"  -m "rku-action v${MAJOR} → v${VERSION}"
+          git push origin "v${VERSION}"
+          git push -f origin "v${MAJOR}"
+          echo "Tagged v${VERSION} and moved v${MAJOR}."

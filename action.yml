@@ -1,0 +1,59 @@
+name: "rkuhub publish"
+description: "Upload a Roku .pkg to rkuhub and publish it to a channel, failing the build on a failed or reconnect-required job."
+branding:
+  icon: "upload-cloud"
+  color: "purple"
+
+inputs:
+  base-url:
+    description: "rkuhub base URL (no trailing slash), e.g. https://hub.rku.dev"
+    required: true
+  token:
+    description: "rkuhub API token (sent as a bearer). Store as a repo/org secret."
+    required: true
+  channel-slug:
+    description: "Target channel slug, e.g. nami-dev."
+    required: true
+  package-path:
+    description: "Path to the built .pkg artifact to upload."
+    required: true
+  artifact-name:
+    description: "Name to store the artifact under. Defaults to the .pkg filename."
+    required: false
+    default: ""
+  version:
+    description: "Version label recorded with the publish (e.g. the git sha or release tag)."
+    required: false
+    default: ""
+  poll-timeout-seconds:
+    description: "Max seconds to wait for the publish job to reach a terminal state."
+    required: false
+    default: "300"
+  poll-interval-seconds:
+    description: "Seconds between job-status polls."
+    required: false
+    default: "5"
+
+outputs:
+  job-id:
+    description: "The rkuhub publish job id."
+    value: ${{ steps.publish.outputs.job-id }}
+  channel-id:
+    description: "The Roku channel id from the publish result, when available."
+    value: ${{ steps.publish.outputs.channel-id }}
+
+runs:
+  using: "composite"
+  steps:
+    - id: publish
+      shell: bash
+      run: node "${{ github.action_path }}/dist/index.mjs"
+      env:
+        RKU_BASE_URL: ${{ inputs.base-url }}
+        RKU_TOKEN: ${{ inputs.token }}
+        RKU_CHANNEL_SLUG: ${{ inputs.channel-slug }}
+        RKU_PACKAGE_PATH: ${{ inputs.package-path }}
+        RKU_ARTIFACT_NAME: ${{ inputs.artifact-name }}
+        RKU_VERSION: ${{ inputs.version }}
+        RKU_POLL_TIMEOUT_SECONDS: ${{ inputs.poll-timeout-seconds }}
+        RKU_POLL_INTERVAL_SECONDS: ${{ inputs.poll-interval-seconds }}
