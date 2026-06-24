@@ -13,7 +13,6 @@ jobs:
 
       - uses: namiml/rku-action@v1
         with:
-          base-url: https://hub.rku.dev
           token: ${{ secrets.RKU_TOKEN }}
           channel-slug: my-channel
           package-path: ./out/my-app.pkg
@@ -24,7 +23,7 @@ jobs:
 
 | Input | Required | Default | Description |
 |---|---|---|---|
-| `base-url` | yes | — | rkuhub base URL, no trailing slash (e.g. `https://hub.rku.dev`). |
+| `base-url` | no | `https://hub.rku.dev` | rkuhub base URL, no trailing slash. Override only for a non-default host. |
 | `token` | yes | — | rkuhub API token, sent as a bearer. Store it as a repo/org **secret**. |
 | `channel-slug` | yes | — | Target channel slug (e.g. `nami-dev`). |
 | `package-path` | yes | — | Path to the built `.pkg` to upload. |
@@ -48,8 +47,8 @@ jobs:
 
 ## Token
 
-Generate an API token in the rkuhub dashboard and store it as a GitHub secret (`RKU_TOKEN` above). The token is scoped to your org and is sent only to your `base-url`.
+Generate an API token in the [rkuhub](https://hub.rku.dev) dashboard and store it as a GitHub secret (`RKU_TOKEN` above). The token is scoped to your org and is sent only to your `base-url`.
 
 ---
 
-Maintained by [Nami ML](https://www.nami.ml). Your use is subject to the [terms of service](https://www.nami.ml/legal/tos).
+Maintained by [Nami ML](https://www.nami.ml).
