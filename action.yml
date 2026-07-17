@@ -26,6 +26,14 @@ inputs:
     description: "Version label recorded with the publish (e.g. the git sha or release tag)."
     required: false
     default: ""
+  release-notes:
+    description: "\"What's New\" release notes recorded with the publish and submitted to the store."
+    required: false
+    default: ""
+  release-notes-file:
+    description: "Path to a text/markdown file with the release notes (instead of release-notes)."
+    required: false
+    default: ""
   poll-timeout-seconds:
     description: "Max seconds to wait for the publish job to reach a terminal state."
     required: false
@@ -56,5 +64,7 @@ runs:
         RKU_PACKAGE_PATH: ${{ inputs.package-path }}
         RKU_ARTIFACT_NAME: ${{ inputs.artifact-name }}
         RKU_VERSION: ${{ inputs.version }}
+        RKU_RELEASE_NOTES: ${{ inputs.release-notes }}
+        RKU_RELEASE_NOTES_FILE: ${{ inputs.release-notes-file }}
         RKU_POLL_TIMEOUT_SECONDS: ${{ inputs.poll-timeout-seconds }}
         RKU_POLL_INTERVAL_SECONDS: ${{ inputs.poll-interval-seconds }}
