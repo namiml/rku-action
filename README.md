@@ -29,6 +29,8 @@ jobs:
 | `package-path` | yes | — | Path to the built `.pkg` to upload. |
 | `artifact-name` | no | the `.pkg` filename | Name to store the artifact under. |
 | `version` | no | — | Version label recorded with the publish (e.g. the git sha or tag). |
+| `release-notes` | no | — | "What's New" release notes recorded with the publish and submitted to the store. |
+| `release-notes-file` | no | — | Path to a text/markdown file with the release notes (instead of `release-notes`). |
 | `poll-timeout-seconds` | no | `300` | Max seconds to wait for a terminal job state. |
 | `poll-interval-seconds` | no | `5` | Seconds between job-status polls. |
 
