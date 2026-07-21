@@ -1,5 +1,5 @@
 name: "rkuhub publish"
-description: "Upload a Roku .pkg to rkuhub and publish it to a channel, failing the build on a failed or reconnect-required job."
+description: "Upload a build to rkuhub and publish it — a Roku .pkg to a channel, or an Amazon .apk to a Live App Testing app — failing the build on a failed or reconnect-required job."
 branding:
   icon: "upload-cloud"
   color: "purple"
@@ -12,11 +12,20 @@ inputs:
   token:
     description: "rkuhub API token (sent as a bearer). Store as a repo/org secret."
     required: true
+  platform:
+    description: "Target platform: roku (default) or amazon."
+    required: false
+    default: "roku"
   channel-slug:
-    description: "Target channel slug, e.g. nami-dev."
-    required: true
+    description: "Roku target channel slug, e.g. nami-dev. Required when platform is roku."
+    required: false
+    default: ""
+  app-id:
+    description: "Amazon app id (the console titleId, amzn1.devportal.mobileapp.*). Required when platform is amazon."
+    required: false
+    default: ""
   package-path:
-    description: "Path to the built .pkg artifact to upload."
+    description: "Path to the built artifact to upload (.pkg for Roku, .apk for Amazon)."
     required: true
   artifact-name:
     description: "Name to store the artifact under. Defaults to the .pkg filename."
@@ -60,7 +69,9 @@ runs:
       env:
         RKU_BASE_URL: ${{ inputs.base-url }}
         RKU_TOKEN: ${{ inputs.token }}
+        RKU_PLATFORM: ${{ inputs.platform }}
         RKU_CHANNEL_SLUG: ${{ inputs.channel-slug }}
+        RKU_APP_ID: ${{ inputs.app-id }}
         RKU_PACKAGE_PATH: ${{ inputs.package-path }}
         RKU_ARTIFACT_NAME: ${{ inputs.artifact-name }}
         RKU_VERSION: ${{ inputs.version }}
