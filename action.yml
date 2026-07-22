@@ -51,6 +51,10 @@ inputs:
     description: "Seconds between job-status polls."
     required: false
     default: "5"
+  continue-on-error:
+    description: "When true, a failed/reconnect-required/timed-out publish emits a warning and the step still passes (exit 0) instead of failing the build. Default false."
+    required: false
+    default: "false"
 
 outputs:
   job-id:
@@ -79,3 +83,4 @@ runs:
         RKU_RELEASE_NOTES_FILE: ${{ inputs.release-notes-file }}
         RKU_POLL_TIMEOUT_SECONDS: ${{ inputs.poll-timeout-seconds }}
         RKU_POLL_INTERVAL_SECONDS: ${{ inputs.poll-interval-seconds }}
+        RKU_CONTINUE_ON_ERROR: ${{ inputs.continue-on-error }}
